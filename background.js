@@ -11,31 +11,47 @@ browser.runtime.onMessage.addListener(function(message) {
 });
 
 /// Tab functions
-let previousUrl;
-let navigationListener = function(details) {
-	const currentUrl = details.url;
+let previousUrl = null;
+let tabId = -1;
 
-	let canCloseTab = (previousUrl && previousUrl == currentUrl) || currentUrl.startsWith("moz-extension://") || currentUrl.startsWith("about:blank") || currentUrl.startsWith("about:home");
+let navigationListener = async function(details) {
+	if(tabId == -1) return;
+	if(previousUrl == null) return;
+	if(details.tabId != tabId) return;
+		
+	const navigateToUrl = details.url;
+
+	let canCloseTab = previousUrl == navigateToUrl || 
+		navigateToUrl.startsWith("moz-extension://") || 
+		navigateToUrl.startsWith("about:blank") || 
+		navigateToUrl.startsWith("about:home");
+	
 	if (canCloseTab) {
 		browser.webNavigation.onCommitted.removeListener(navigationListener);
 
-		closeTab();
+		await closeTab();
 		previousUrl = null;
+		tabId = -1;
 	}
 
-	previousUrl = currentUrl;
+	previousUrl = navigateToUrl;
 };
 
-function goBackOrClose(){
-	browser.tabs.goBack();
-
+async function goBackOrClose(){
+	let activeTabs = await browser.tabs.query({currentWindow: true, active: true});
+	let activeTab = activeTabs[0];
+	tabId = activeTab.id;
+	previousUrl = activeTab.url;
+	
 	// Listen for navigation events
 	browser.webNavigation.onCommitted.addListener(navigationListener);
+	
+	// Navigate
+	await browser.tabs.goBack();
 }
 
-function closeTab(){
-	browser.tabs.query({currentWindow: true, active: true}).then((activeTabs) => {
-		let activeTab = activeTabs[0];
-		browser.tabs.remove(activeTab.id);
-	}, console.error);
+async function closeTab(){
+	let activeTabs = await browser.tabs.query({currentWindow: true, active: true});
+	let activeTab = activeTabs[0];
+	browser.tabs.remove(activeTab.id);
 }
