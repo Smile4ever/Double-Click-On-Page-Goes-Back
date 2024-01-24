@@ -3,7 +3,7 @@
 	"description": "Double click on a page to go back to the previous page.",
 	"homepage_url": "https://github.com/Smile4ever/Double-Click-On-Page-Goes-Back",
 	"manifest_version": 3,
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"background": {
 		"scripts": ["background.js"]
 	},
