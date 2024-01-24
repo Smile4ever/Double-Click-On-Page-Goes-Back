@@ -7,5 +7,9 @@ If there is no page to go back to, the current tab will close.
 
 This addon does not work on these pages:
 * about: pages
-* priviledged websites such as addons.mozilla.org (caused by security restrictions)
+* privileged websites such as addons.mozilla.org (caused by security restrictions)
 * Flash websites
+
+# Availability
+
+Available for Firefox here: https://addons.mozilla.org/firefox/addon/double-click-on-page-goes-back/
