@@ -1,3 +1,7 @@
+0.1.3
+=====
+* Implement compatibility with https://addons.mozilla.org/firefox/addon/open-in-new-tab-domain
+
 0.1.2
 =====
 * Use browser.webNavigation.onBeforeNavigate instead of browser.webNavigation.onCommitted
